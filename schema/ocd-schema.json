@@ -1,0 +1,312 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/open-contributions-descriptor-1.0.schema.json",
+  "title": "Open Contributions Descriptor (OCD)",
+  "description": "Machine-readable descriptor for an organization's open source projects, open data publications, and open standards participation.",
+  "type": "object",
+  "additionalProperties": true,
+
+  "required": ["spec_version", "generated_at", "organization"],
+
+  "properties": {
+    "spec_version": {
+      "type": "string",
+      "description": "Version of the OCD specification implemented by this document.",
+      "minLength": 1
+    },
+
+    "generated_at": {
+      "type": "string",
+      "description": "Timestamp indicating when the file was generated (RFC 3339 date-time).",
+      "format": "date-time"
+    },
+
+    "organization": { "$ref": "#/$defs/organization" },
+    "contacts": { "$ref": "#/$defs/contacts" },
+    "policies": { "$ref": "#/$defs/policies" },
+
+    "projects": {
+      "type": "array",
+      "description": "List of open source projects maintained or contributed to.",
+      "items": { "$ref": "#/$defs/project" }
+    },
+
+    "open_data": {
+      "type": "array",
+      "description": "Published open datasets and feeds.",
+      "items": { "$ref": "#/$defs/openData" }
+    },
+
+    "open_standards": {
+      "type": "array",
+      "description": "Participation in standards organizations or specifications.",
+      "items": { "$ref": "#/$defs/openStandards" }
+    },
+
+    "extensions": {
+      "type": "object",
+      "description": "Vendor or organization-specific extensions. Consumers MUST ignore unknown extension fields.",
+      "additionalProperties": true
+    }
+  },
+
+  "$defs": {
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "minLength": 1
+    },
+
+    "email": {
+      "type": "string",
+      "format": "email",
+      "minLength": 3
+    },
+
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+
+    "organization": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name", "domain"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "domain": {
+          "type": "string",
+          "description": "Primary domain hosting the descriptor (e.g., example.org).",
+          "minLength": 1
+        },
+        "description": { "type": "string" },
+        "country": {
+          "type": "string",
+          "description": "ISO 3166-1 alpha-2 country code.",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "links": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "homepage": { "$ref": "#/$defs/url" },
+            "opensource_page": { "$ref": "#/$defs/url" },
+            "github_org": { "$ref": "#/$defs/url" }
+          }
+        }
+      }
+    },
+
+    "contacts": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "opensource": { "$ref": "#/$defs/contact" },
+        "security": { "$ref": "#/$defs/contact" },
+        "community": { "$ref": "#/$defs/contact" }
+      }
+    },
+
+    "contact": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "email": { "$ref": "#/$defs/email" },
+        "url": { "$ref": "#/$defs/url" }
+      },
+      "anyOf": [
+        { "required": ["email"] },
+        { "required": ["url"] }
+      ]
+    },
+
+    "policies": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "code_of_conduct": { "$ref": "#/$defs/url" },
+        "contributing": { "$ref": "#/$defs/url" },
+        "vulnerability_disclosure": { "$ref": "#/$defs/url" },
+        "license_policy": { "$ref": "#/$defs/url" }
+      }
+    },
+
+    "project": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name", "description", "repository"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+
+        "status": {
+          "type": "string",
+          "description": "Lifecycle status of the project.",
+          "enum": ["active", "archived", "disabled"]
+        },
+
+        "repository": { "$ref": "#/$defs/repository" },
+        "links": { "$ref": "#/$defs/projectLinks" },
+        "participate": { "$ref": "#/$defs/participate" },
+        "governance": { "$ref": "#/$defs/governance" },
+        "release": { "$ref": "#/$defs/release" },
+        "tags": { "$ref": "#/$defs/tags" }
+      }
+    },
+
+    "repository": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["url", "license"],
+      "properties": {
+        "url": { "$ref": "#/$defs/url" },
+        "license": {
+          "type": "string",
+          "description": "SPDX license identifier (recommended).",
+          "minLength": 1
+        },
+        "type": { "type": "string", "minLength": 1 },
+        "clone": { "$ref": "#/$defs/url" },
+        "tests": { "$ref": "#/$defs/url" }
+      }
+    },
+
+    "projectLinks": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "project_page": { "$ref": "#/$defs/url" },
+        "homepage": { "$ref": "#/$defs/url" },
+        "documentation": { "$ref": "#/$defs/url" },
+        "demo": { "$ref": "#/$defs/url" },
+        "releases": { "$ref": "#/$defs/url" },
+        "community": { "$ref": "#/$defs/url" },
+        "metadata": { "$ref": "#/$defs/projectMetadata" }
+      }
+    },
+
+    "projectMetadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "openapi": { "$ref": "#/$defs/url" }
+      }
+    },
+
+    "participate": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "issues": { "$ref": "#/$defs/url" },
+        "good_first_issues": { "$ref": "#/$defs/url" },
+        "chat": { "$ref": "#/$defs/url" },
+        "docs": { "$ref": "#/$defs/url" }
+      }
+    },
+
+    "governance": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "maintainers": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "codeowners": { "$ref": "#/$defs/url" }
+      }
+    },
+
+    "release": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "changelog": { "$ref": "#/$defs/url" },
+        "security_policy": { "$ref": "#/$defs/url" }
+      }
+    },
+
+    "openData": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name", "license", "urls"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "license": { "type": "string", "minLength": 1 },
+        "publisher": { "type": "string" },
+
+        "urls": { "$ref": "#/$defs/openDataUrls" },
+
+        "formats": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+
+        "update_frequency": {
+          "type": "string",
+          "description": "Publication cadence (e.g., daily, weekly, monthly)."
+        },
+
+        "schema": { "$ref": "#/$defs/url" },
+        "tags": { "$ref": "#/$defs/tags" }
+      }
+    },
+
+    "openDataUrls": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "landing_page": { "$ref": "#/$defs/url" },
+        "download": { "$ref": "#/$defs/url" },
+        "api": { "$ref": "#/$defs/url" }
+      },
+      "anyOf": [
+        { "required": ["download"] },
+        { "required": ["api"] },
+        { "required": ["landing_page"] }
+      ]
+    },
+
+    "openStandards": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["body"],
+      "properties": {
+        "body": { "type": "string", "minLength": 1 },
+
+        "working_groups": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+
+        "contributions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/standardsContribution" }
+        },
+
+        "contacts": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/contact" }
+        }
+      }
+    },
+
+    "standardsContribution": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["type", "title", "url"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Contribution type (e.g., draft-author, editor, implementation, review).",
+          "minLength": 1
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "url": { "$ref": "#/$defs/url" }
+      }
+    }
+  }
+}
