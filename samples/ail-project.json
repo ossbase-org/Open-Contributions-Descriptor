@@ -1,0 +1,797 @@
+{
+  "spec_version": "1.0",
+  "generated_at": "2026-02-23T09:44:46Z",
+  "organization": {
+    "name": "ail project",
+    "domain": "ail-project.org",
+    "description": "AIL Project is an open source project to collect and analyse data to produce security intelligence.",
+    "links": {
+      "homepage": "https://www.ail-project.org/",
+      "github_org": "https://github.com/ail-project"
+    }
+  },
+  "projects": [
+    {
+      "name": "ail-exchange-format",
+      "description": "AIL Exchange Format",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-exchange-format",
+        "license": "BSD-2-Clause",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-exchange-format.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/ail-exchange-format/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-exchange-format/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-exchange-format/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-exchange-format/releases",
+        "security_policy": "https://github.com/ail-project/ail-exchange-format/security/policy"
+      }
+    },
+    {
+      "name": "ail-feeder-activity-pub",
+      "description": "External ActivityPub feeder for AIL-framework.",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-feeder-activity-pub",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-feeder-activity-pub.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/ail-feeder-activity-pub/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-feeder-activity-pub/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-feeder-activity-pub/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-feeder-activity-pub/releases",
+        "security_policy": "https://github.com/ail-project/ail-feeder-activity-pub/security/policy"
+      }
+    },
+    {
+      "name": "ail-feeder-apk",
+      "description": "This AIL feeder pushes annotated APK to an AIL instance",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-feeder-apk",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-feeder-apk.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/ail-feeder-apk/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-feeder-apk/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-feeder-apk/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-feeder-apk/releases",
+        "security_policy": "https://github.com/ail-project/ail-feeder-apk/security/policy"
+      }
+    },
+    {
+      "name": "ail-feeder-atom-rss",
+      "description": "Atom and RSS feeder for AIL framework",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-feeder-atom-rss",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-feeder-atom-rss.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/ail-feeder-atom-rss/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-feeder-atom-rss/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-feeder-atom-rss/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-feeder-atom-rss/releases",
+        "security_policy": "https://github.com/ail-project/ail-feeder-atom-rss/security/policy"
+      }
+    },
+    {
+      "name": "ail-feeder-ccrawl",
+      "description": "AIL Feeder from Common-Crawl",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-feeder-ccrawl",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-feeder-ccrawl.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/ail-feeder-ccrawl/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-feeder-ccrawl/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-feeder-ccrawl/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-feeder-ccrawl/releases",
+        "security_policy": "https://github.com/ail-project/ail-feeder-ccrawl/security/policy"
+      }
+    },
+    {
+      "name": "ail-feeder-ct",
+      "description": "AIL feeder for certificate transparency",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-feeder-ct",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-feeder-ct.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/ail-feeder-ct/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-feeder-ct/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-feeder-ct/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-feeder-ct/releases",
+        "security_policy": "https://github.com/ail-project/ail-feeder-ct/security/policy"
+      }
+    },
+    {
+      "name": "ail-feeder-discord",
+      "description": "Discord feeder for AIL",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-feeder-discord",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-feeder-discord.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/ail-feeder-discord/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-feeder-discord/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-feeder-discord/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-feeder-discord/releases",
+        "security_policy": "https://github.com/ail-project/ail-feeder-discord/security/policy"
+      },
+      "tags": [
+        "ail-framework",
+        "discord",
+        "osint-tool",
+        "threat-intelligence"
+      ]
+    },
+    {
+      "name": "ail-feeder-gharchive",
+      "description": "AIL feeder for GitHub archive - gharchive.org",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-feeder-gharchive",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-feeder-gharchive.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/ail-feeder-gharchive/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-feeder-gharchive/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-feeder-gharchive/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-feeder-gharchive/releases",
+        "security_policy": "https://github.com/ail-project/ail-feeder-gharchive/security/policy"
+      }
+    },
+    {
+      "name": "ail-feeder-github-repo",
+      "description": "AIL feeder for GitHub Repository",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-feeder-github-repo",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-feeder-github-repo.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/ail-feeder-github-repo/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-feeder-github-repo/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-feeder-github-repo/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-feeder-github-repo/releases",
+        "security_policy": "https://github.com/ail-project/ail-feeder-github-repo/security/policy"
+      }
+    },
+    {
+      "name": "ail-feeder-image",
+      "description": "Image feeder for AIL",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-feeder-image",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-feeder-image.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/ail-feeder-image/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-feeder-image/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-feeder-image/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-feeder-image/releases",
+        "security_policy": "https://github.com/ail-project/ail-feeder-image/security/policy"
+      }
+    },
+    {
+      "name": "ail-feeder-jsonlogs",
+      "description": "Aggregate json log lines and push to AIL framework.",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-feeder-jsonlogs",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-feeder-jsonlogs.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/ail-feeder-jsonlogs/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-feeder-jsonlogs/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-feeder-jsonlogs/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-feeder-jsonlogs/releases",
+        "security_policy": "https://github.com/ail-project/ail-feeder-jsonlogs/security/policy"
+      },
+      "tags": [
+        "ail-framework"
+      ]
+    },
+    {
+      "name": "ail-feeder-leak",
+      "description": "AIL LeakFeeder: A Module for AIL Framework that automate the process to feed leaked files automatically",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-feeder-leak",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-feeder-leak.git"
+      },
+      "links": {
+        "project_page": "https://github.com/ail-project/ail-framework",
+        "releases": "https://github.com/ail-project/ail-feeder-leak/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-feeder-leak/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-feeder-leak/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-feeder-leak/releases",
+        "security_policy": "https://github.com/ail-project/ail-feeder-leak/security/policy"
+      },
+      "tags": [
+        "ail-feeder",
+        "ail-framework",
+        "automation",
+        "cyber-threat-intelligence",
+        "cybersecurity",
+        "feeder",
+        "python3",
+        "threat-hunting"
+      ]
+    },
+    {
+      "name": "ail-feeder-matrix",
+      "description": "No description provided.",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-feeder-matrix",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-feeder-matrix.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/ail-feeder-matrix/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-feeder-matrix/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-feeder-matrix/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-feeder-matrix/releases",
+        "security_policy": "https://github.com/ail-project/ail-feeder-matrix/security/policy"
+      }
+    },
+    {
+      "name": "ail-feeder-pdf",
+      "description": "PDF feeder for AIL",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-feeder-pdf",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-feeder-pdf.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/ail-feeder-pdf/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-feeder-pdf/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-feeder-pdf/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-feeder-pdf/releases",
+        "security_policy": "https://github.com/ail-project/ail-feeder-pdf/security/policy"
+      }
+    },
+    {
+      "name": "ail-feeder-telegram",
+      "description": "External telegram feeder for AIL framework ",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-feeder-telegram",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-feeder-telegram.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/ail-feeder-telegram/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-feeder-telegram/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-feeder-telegram/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-feeder-telegram/releases",
+        "security_policy": "https://github.com/ail-project/ail-feeder-telegram/security/policy"
+      }
+    },
+    {
+      "name": "ail-feeder-twitter",
+      "description": "External twitter feeder for AIL framework",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-feeder-twitter",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-feeder-twitter.git"
+      },
+      "links": {
+        "project_page": "https://ail-project.github.io/ail-feeder-twitter/",
+        "releases": "https://github.com/ail-project/ail-feeder-twitter/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-feeder-twitter/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-feeder-twitter/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-feeder-twitter/releases",
+        "security_policy": "https://github.com/ail-project/ail-feeder-twitter/security/policy"
+      },
+      "tags": [
+        "ail-framework",
+        "osint",
+        "twitter",
+        "twitter-scraper"
+      ]
+    },
+    {
+      "name": "ail-framework",
+      "description": "AIL framework - Analysis Information Leak framework",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-framework",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-framework.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/ail-framework/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-framework/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-framework/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-framework/releases",
+        "security_policy": "https://github.com/ail-project/ail-framework/security/policy"
+      },
+      "tags": [
+        "ail-framework",
+        "data-mining",
+        "information-extraction",
+        "information-security",
+        "leak"
+      ]
+    },
+    {
+      "name": "ail-logos",
+      "description": "ail project logos",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-logos",
+        "license": "NOASSERTION",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-logos.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/ail-logos/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-logos/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-logos/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-logos/releases",
+        "security_policy": "https://github.com/ail-project/ail-logos/security/policy"
+      }
+    },
+    {
+      "name": "ail-training",
+      "description": "AIL project training materials",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-training",
+        "license": "NOASSERTION",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-training.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/ail-training/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-training/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-training/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-training/releases",
+        "security_policy": "https://github.com/ail-project/ail-training/security/policy"
+      }
+    },
+    {
+      "name": "ail-website",
+      "description": "AIL web-site",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-website",
+        "license": "MIT",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-website.git"
+      },
+      "links": {
+        "project_page": "https://www.ail-project.org/",
+        "releases": "https://github.com/ail-project/ail-website/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-website/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-website/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-website/releases",
+        "security_policy": "https://github.com/ail-project/ail-website/security/policy"
+      }
+    },
+    {
+      "name": "ail-yara-rules",
+      "description": "A set of YARA rules for the AIL framework to detect leak or information disclosure",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ail-yara-rules",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ail-yara-rules.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/ail-yara-rules/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ail-yara-rules/issues",
+        "good_first_issues": "https://github.com/ail-project/ail-yara-rules/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ail-yara-rules/releases",
+        "security_policy": "https://github.com/ail-project/ail-yara-rules/security/policy"
+      },
+      "tags": [
+        "ail-framework",
+        "ail-yara-rules",
+        "information-disclosure",
+        "yara",
+        "yara-rules",
+        "yara-signatures"
+      ]
+    },
+    {
+      "name": "equaeris",
+      "description": "A modular scanner for finding open data store (MongoDB, Redis or alike) and feed result into AIL",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/equaeris",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/equaeris.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/equaeris/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/equaeris/issues",
+        "good_first_issues": "https://github.com/ail-project/equaeris/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/equaeris/releases",
+        "security_policy": "https://github.com/ail-project/equaeris/security/policy"
+      }
+    },
+    {
+      "name": "ex_ail",
+      "description": "Elixir library using the AIL Rest API ",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/ex_ail",
+        "license": "BSD-3-Clause",
+        "type": "git",
+        "clone": "https://github.com/ail-project/ex_ail.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/ex_ail/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/ex_ail/issues",
+        "good_first_issues": "https://github.com/ail-project/ex_ail/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/ex_ail/releases",
+        "security_policy": "https://github.com/ail-project/ex_ail/security/policy"
+      },
+      "tags": [
+        "ail-project",
+        "elixir-lang",
+        "elixir-library"
+      ]
+    },
+    {
+      "name": "faup-rs",
+      "description": "Url parsing library inspired by Faup project originally written in C",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/faup-rs",
+        "license": "GPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/faup-rs.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/faup-rs/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/faup-rs/issues",
+        "good_first_issues": "https://github.com/ail-project/faup-rs/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/faup-rs/releases",
+        "security_policy": "https://github.com/ail-project/faup-rs/security/policy"
+      }
+    },
+    {
+      "name": "lacus",
+      "description": "Lacus is a capturing system using playwright, as a web service. ",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/lacus",
+        "license": "BSD-3-Clause",
+        "type": "git",
+        "clone": "https://github.com/ail-project/lacus.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/lacus/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/lacus/issues",
+        "good_first_issues": "https://github.com/ail-project/lacus/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/lacus/releases",
+        "security_policy": "https://github.com/ail-project/lacus/security/policy"
+      },
+      "tags": [
+        "web",
+        "web-capture"
+      ]
+    },
+    {
+      "name": "LacusCore",
+      "description": "The modulable part of Lacus",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/LacusCore",
+        "license": "BSD-3-Clause",
+        "type": "git",
+        "clone": "https://github.com/ail-project/LacusCore.git"
+      },
+      "links": {
+        "project_page": "https://lacuscore.readthedocs.io/en/latest/",
+        "documentation": "https://lacuscore.readthedocs.io/en/latest/",
+        "releases": "https://github.com/ail-project/LacusCore/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/LacusCore/issues",
+        "good_first_issues": "https://github.com/ail-project/LacusCore/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22",
+        "docs": "https://lacuscore.readthedocs.io/en/latest/"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/LacusCore/releases",
+        "security_policy": "https://github.com/ail-project/LacusCore/security/policy"
+      },
+      "tags": [
+        "lacus"
+      ]
+    },
+    {
+      "name": "onion-lookup",
+      "description": "Tor onion address lookup",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/onion-lookup",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/onion-lookup.git"
+      },
+      "links": {
+        "project_page": "https://onion.ail-project.org/",
+        "releases": "https://github.com/ail-project/onion-lookup/releases",
+        "metadata": {
+          "openapi": "https://raw.githubusercontent.com/ail-project/onion-lookup/main/openapi.yml"
+        }
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/onion-lookup/issues",
+        "good_first_issues": "https://github.com/ail-project/onion-lookup/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/onion-lookup/releases",
+        "security_policy": "https://github.com/ail-project/onion-lookup/security/policy"
+      },
+      "tags": [
+        "ail-project",
+        "darkweb",
+        "darkweb-onion-links",
+        "osint",
+        "tor"
+      ]
+    },
+    {
+      "name": "PyAIL",
+      "description": " Python library using the AIL Rest API ",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/PyAIL",
+        "license": "BSD-3-Clause",
+        "type": "git",
+        "clone": "https://github.com/ail-project/PyAIL.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/PyAIL/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/PyAIL/issues",
+        "good_first_issues": "https://github.com/ail-project/PyAIL/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/PyAIL/releases",
+        "security_policy": "https://github.com/ail-project/PyAIL/security/policy"
+      }
+    },
+    {
+      "name": "PyLacus",
+      "description": "Python module to enqueue and query a remote Lacus instance",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/PyLacus",
+        "license": "BSD-3-Clause",
+        "type": "git",
+        "clone": "https://github.com/ail-project/PyLacus.git"
+      },
+      "links": {
+        "project_page": "https://pylacus.readthedocs.io/en/latest/index.html",
+        "documentation": "https://pylacus.readthedocs.io/en/latest/index.html",
+        "releases": "https://github.com/ail-project/PyLacus/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/PyLacus/issues",
+        "good_first_issues": "https://github.com/ail-project/PyLacus/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22",
+        "docs": "https://pylacus.readthedocs.io/en/latest/index.html"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/PyLacus/releases",
+        "security_policy": "https://github.com/ail-project/PyLacus/security/policy"
+      },
+      "tags": [
+        "capture-website",
+        "lacus",
+        "playwright"
+      ]
+    },
+    {
+      "name": "Similarius",
+      "description": "Similarius is a Python library to compare web page and evaluate the level of similarity.",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/Similarius",
+        "license": "BSD-2-Clause",
+        "type": "git",
+        "clone": "https://github.com/ail-project/Similarius.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/Similarius/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/Similarius/issues",
+        "good_first_issues": "https://github.com/ail-project/Similarius/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/Similarius/releases",
+        "security_policy": "https://github.com/ail-project/Similarius/security/policy"
+      }
+    },
+    {
+      "name": "text-readability",
+      "description": "No description provided.",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/text-readability",
+        "license": "NOASSERTION",
+        "type": "git",
+        "clone": "https://github.com/ail-project/text-readability.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/text-readability/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/text-readability/issues",
+        "good_first_issues": "https://github.com/ail-project/text-readability/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/text-readability/releases",
+        "security_policy": "https://github.com/ail-project/text-readability/security/policy"
+      }
+    },
+    {
+      "name": "topic-extractor",
+      "description": "A python library to extract topic from text",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/ail-project/topic-extractor",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/ail-project/topic-extractor.git"
+      },
+      "links": {
+        "releases": "https://github.com/ail-project/topic-extractor/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/ail-project/topic-extractor/issues",
+        "good_first_issues": "https://github.com/ail-project/topic-extractor/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/ail-project/topic-extractor/releases",
+        "security_policy": "https://github.com/ail-project/topic-extractor/security/policy"
+      }
+    }
+  ],
+  "extensions": {}
+}
