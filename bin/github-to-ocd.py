@@ -200,6 +200,7 @@ def build_project(repo: dict, gh: GitHubClient, owner: str) -> Dict[str, Any]:
         "name": name,
         "description": description if description else "No description provided.",
         "status": status,
+        "_stars": repo.get("stargazers_count", 0),  # Use to sort the table
         "repository": {
             "url": html_url,
             "license": safe_spdx(repo),
@@ -309,6 +310,10 @@ def build_ocd(
         projects.append(build_project(repo, gh, owner=org))
         if max_repos is not None and len(projects) >= max_repos:
             break
+    projects.sort(key=lambda p: p.get("_stars", 0), reverse=True)
+
+    for p in projects:
+        p.pop("_stars", None)
 
     ocd: Dict[str, Any] = {
         "spec_version": spec_version,
