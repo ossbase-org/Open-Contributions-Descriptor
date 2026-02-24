@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 """
-Generate an Open Contributions Descriptor (OCD) JSON file from a GitHub organization.
+Generate or update an Open Contributions Descriptor (OCD) JSON file from a GitHub organization.
 
-What it does
-- Pulls public repositories from a GitHub org
-- Produces OCD JSON adhering to your draft spec:
-  - Top-level: spec_version, generated_at, organization
-  - Projects: name, description, status (active|archived|disabled), repository (url/license/...), links (project_page/metadata.openapi when detected)
-- Optionally detects OpenAPI specs by looking for common files in the repo root:
-  openapi.json, openapi.yaml, openapi.yml, swagger.json, swagger.yaml, swagger.yml
+New in this version:
+- Can update an existing OCD JSON file (merge by repository URL or name).
+- Preserves non-project sections by default (open_data, open_standards, contacts, policies, extensions, etc.).
+- Sorts projects by GitHub stars (descending), without adding a schema-visible field.
 
 Requirements
 - Python 3.9+
@@ -17,16 +14,6 @@ Requirements
 Auth
 - Optional but recommended to avoid low rate limits:
   export GITHUB_TOKEN="ghp_... or fine-grained token"
-
-Examples
-  python generate_ocd.py --org example-org --domain example.org > open-contributions.json
-  python generate_ocd.py --org example-org --domain example.org --output open-contributions.json
-
-Notes / Limitations
-- GitHub does not provide a reliable "organization domain" value; you must supply --domain.
-- License can be missing; we default to "NOASSERTION" to keep schema validity.
-- "tests" URL is not reliably derivable across all CI systems; we omit it by default.
-- "security_policy" link is included heuristically (GitHub renders it if present).
 """
 
 from __future__ import annotations
@@ -37,7 +24,8 @@ import os
 import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Tuple
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 import requests
 
@@ -55,6 +43,10 @@ OPENAPI_CANDIDATES = [
 ]
 
 
+# ----------------------------
+# GitHub API client
+# ----------------------------
+
 @dataclass
 class GitHubClient:
     token: Optional[str]
@@ -65,7 +57,7 @@ class GitHubClient:
         s = requests.Session()
         headers = {
             "Accept": "application/vnd.github+json",
-            "User-Agent": "ocd-generator/1.0",
+            "User-Agent": "ocd-generator/1.1",
         }
         if token:
             headers["Authorization"] = f"Bearer {token}"
@@ -99,32 +91,40 @@ class GitHubClient:
         return items
 
 
+# ----------------------------
+# Utility
+# ----------------------------
+
 def now_rfc3339() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
+def is_url(s: str) -> bool:
+    return s.startswith("http://") or s.startswith("https://")
+
+
+def load_json_from_path_or_url(source: str) -> Any:
+    if is_url(source):
+        r = requests.get(source, timeout=30)
+        r.raise_for_status()
+        return r.json()
+    p = Path(source)
+    if not p.exists():
+        raise FileNotFoundError(f"Input JSON not found: {source}")
+    with p.open("r", encoding="utf-8") as f:
+        return json.load(f)
+
+
 def safe_spdx(repo: dict) -> str:
-    """
-    Return SPDX license id if present; otherwise NOASSERTION.
-    """
     lic = repo.get("license")
     if isinstance(lic, dict):
         spdx = lic.get("spdx_id")
-        if spdx and spdx != "NOASSERTION":
-            return str(spdx)
-        # GitHub often returns "NOASSERTION" explicitly; keep it valid
         if spdx:
             return str(spdx)
     return "NOASSERTION"
 
 
 def repo_status(repo: dict) -> str:
-    """
-    Map GitHub repository flags to OCD project.status enum:
-      - archived -> archived
-      - disabled -> disabled
-      - else     -> active
-    """
     if repo.get("archived") is True:
         return "archived"
     if repo.get("disabled") is True:
@@ -137,21 +137,12 @@ def github_html(path: str) -> str:
 
 
 def build_good_first_issues_url(owner: str, repo_name: str) -> str:
-    # GitHub issues query URL (human friendly)
     return github_html(
         f"{owner}/{repo_name}/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
     )
 
 
-def try_detect_openapi(
-    gh: GitHubClient, owner: str, repo_name: str, default_branch: str
-) -> Optional[str]:
-    """
-    Detect common OpenAPI spec files in the repo root via the contents API.
-    If found, return a raw.githubusercontent.com URL.
-    """
-    # Contents API: /repos/{owner}/{repo}/contents/{path}
-    # Use path "" (root) to list root entries.
+def try_detect_openapi(gh: GitHubClient, owner: str, repo_name: str, default_branch: str) -> Optional[str]:
     url = f"{GITHUB_API}/repos/{owner}/{repo_name}/contents"
     r = gh.get(url, params={"ref": default_branch})
     if r.status_code != 200:
@@ -159,21 +150,14 @@ def try_detect_openapi(
     data = r.json()
     if not isinstance(data, list):
         return None
-
     names = {item.get("name", "") for item in data if isinstance(item, dict)}
     for candidate in OPENAPI_CANDIDATES:
         if candidate in names:
-            # Prefer raw content URL (stable, directly fetchable)
             return f"https://raw.githubusercontent.com/{owner}/{repo_name}/{default_branch}/{candidate}"
     return None
 
 
-def try_detect_codeowners_link(
-    gh: GitHubClient, owner: str, repo_name: str, default_branch: str
-) -> Optional[str]:
-    """
-    Check typical CODEOWNERS locations. If present, return a GitHub blob URL.
-    """
+def try_detect_codeowners_link(gh: GitHubClient, owner: str, repo_name: str, default_branch: str) -> Optional[str]:
     candidates = [
         "CODEOWNERS",
         ".github/CODEOWNERS",
@@ -187,6 +171,10 @@ def try_detect_codeowners_link(
     return None
 
 
+# ----------------------------
+# Build a project from GitHub repo object
+# ----------------------------
+
 def build_project(repo: dict, gh: GitHubClient, owner: str) -> Dict[str, Any]:
     name = repo.get("name") or "unknown"
     description = repo.get("description") or ""
@@ -194,13 +182,16 @@ def build_project(repo: dict, gh: GitHubClient, owner: str) -> Dict[str, Any]:
     default_branch = repo.get("default_branch") or "main"
 
     html_url = repo.get("html_url") or github_html(f"{owner}/{name}")
-    clone_url = repo.get("clone_url")  # https clone
+    clone_url = repo.get("clone_url")
 
     project: Dict[str, Any] = {
         "name": name,
         "description": description if description else "No description provided.",
         "status": status,
-        "_stars": repo.get("stargazers_count", 0),  # Use to sort the table
+
+        # internal helper (removed later) used for sorting by popularity
+        "_stars": repo.get("stargazers_count", 0),
+
         "repository": {
             "url": html_url,
             "license": safe_spdx(repo),
@@ -211,25 +202,18 @@ def build_project(repo: dict, gh: GitHubClient, owner: str) -> Dict[str, Any]:
     if clone_url:
         project["repository"]["clone"] = clone_url
 
-    # Links (human + machine)
+    # Links
     links: Dict[str, Any] = {}
-
-    # project_page: prefer repo homepage if provided; else omit
     homepage = repo.get("homepage")
     if isinstance(homepage, str) and homepage.strip():
         links["project_page"] = homepage.strip()
 
-    # documentation: if homepage looks like docs or is explicitly set, keep as documentation too (optional)
-    # (We keep it conservative: only set documentation if explicitly contains 'docs' or 'readthedocs' or similar.)
-    if isinstance(homepage, str) and homepage.strip():
         hp = homepage.strip().lower()
         if "docs" in hp or "readthedocs" in hp:
             links["documentation"] = homepage.strip()
 
-    # releases: always available
     links["releases"] = github_html(f"{owner}/{name}/releases")
 
-    # Optional OpenAPI detection
     openapi_url = try_detect_openapi(gh, owner, name, default_branch)
     if openapi_url:
         links.setdefault("metadata", {})
@@ -243,7 +227,7 @@ def build_project(repo: dict, gh: GitHubClient, owner: str) -> Dict[str, Any]:
     if repo.get("has_issues") is True:
         participate["issues"] = github_html(f"{owner}/{name}/issues")
         participate["good_first_issues"] = build_good_first_issues_url(owner, name)
-    # docs link: if we have documentation link, reuse it
+
     if "links" in project and isinstance(project["links"], dict):
         doc_url = project["links"].get("documentation")
         if isinstance(doc_url, str) and doc_url:
@@ -252,28 +236,84 @@ def build_project(repo: dict, gh: GitHubClient, owner: str) -> Dict[str, Any]:
     if participate:
         project["participate"] = participate
 
-    # Governance: CODEOWNERS if found
+    # Governance
     codeowners = try_detect_codeowners_link(gh, owner, name, default_branch)
     if codeowners:
         project["governance"] = {"codeowners": codeowners}
 
-    # Release: changelog + security_policy (heuristic)
-    release: Dict[str, Any] = {
+    # Release
+    project["release"] = {
         "changelog": github_html(f"{owner}/{name}/releases"),
         "security_policy": github_html(f"{owner}/{name}/security/policy"),
     }
-    project["release"] = release
 
-    # Tags: optionally use topics if present (requires preview in older APIs; now generally available)
     topics = repo.get("topics")
     if isinstance(topics, list) and topics:
-        # Only keep non-empty strings
         cleaned = sorted({t.strip() for t in topics if isinstance(t, str) and t.strip()})
         if cleaned:
             project["tags"] = cleaned
 
     return project
 
+
+# ----------------------------
+# Merging logic (update existing JSON)
+# ----------------------------
+
+def project_key(p: Dict[str, Any]) -> str:
+    """
+    Prefer repository.url as stable key; fall back to name.
+    """
+    repo = p.get("repository")
+    if isinstance(repo, dict):
+        url = repo.get("url")
+        if isinstance(url, str) and url.strip():
+            return f"repo:{url.strip()}"
+    name = p.get("name")
+    if isinstance(name, str) and name.strip():
+        return f"name:{name.strip().lower()}"
+    return "unknown"
+
+
+def deep_merge_preserve(existing: Any, incoming: Any) -> Any:
+    """
+    Deep merge dicts where incoming wins on conflicts, but keeps existing keys not present in incoming.
+    For non-dicts, incoming replaces existing.
+    """
+    if isinstance(existing, dict) and isinstance(incoming, dict):
+        out = dict(existing)
+        for k, v in incoming.items():
+            if k in out:
+                out[k] = deep_merge_preserve(out[k], v)
+            else:
+                out[k] = v
+        return out
+    return incoming
+
+
+def merge_projects(existing_projects: List[Dict[str, Any]], new_projects: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """
+    Merge by repository.url (preferred) or name. Keep custom fields from existing projects,
+    but refresh core/project data from GitHub.
+    """
+    existing_index: Dict[str, Dict[str, Any]] = {project_key(p): p for p in existing_projects if isinstance(p, dict)}
+
+    merged: List[Dict[str, Any]] = []
+    for p in new_projects:
+        k = project_key(p)
+        if k in existing_index:
+            # Preserve existing custom fields, but let GitHub-derived project win for known/core fields
+            merged_project = deep_merge_preserve(existing_index[k], p)
+            merged.append(merged_project)
+        else:
+            merged.append(p)
+
+    return merged
+
+
+# ----------------------------
+# Build OCD (new or updated)
+# ----------------------------
 
 def build_ocd(
     org: str,
@@ -283,8 +323,10 @@ def build_ocd(
     include_forks: bool,
     include_archived: bool,
     max_repos: Optional[int],
+    existing_ocd: Optional[Dict[str, Any]],
+    replace_projects: bool,
 ) -> Dict[str, Any]:
-    # Org metadata
+    # Org metadata from GitHub
     org_url = f"{GITHUB_API}/orgs/{org}"
     r = gh.get(org_url)
     if r.status_code != 200:
@@ -294,11 +336,11 @@ def build_ocd(
     org_name = org_data.get("name") or org
     org_desc = org_data.get("description") or ""
 
-    # Repos
+    # Fetch repos
     repos_url = f"{GITHUB_API}/orgs/{org}/repos"
     repos = gh.paginated_get(repos_url, params={"type": "public", "sort": "full_name"})
 
-    projects: List[Dict[str, Any]] = []
+    new_projects: List[Dict[str, Any]] = []
     for repo in repos:
         if not isinstance(repo, dict):
             continue
@@ -307,50 +349,88 @@ def build_ocd(
         if not include_archived and repo.get("archived") is True:
             continue
 
-        projects.append(build_project(repo, gh, owner=org))
-        if max_repos is not None and len(projects) >= max_repos:
+        new_projects.append(build_project(repo, gh, owner=org))
+        if max_repos is not None and len(new_projects) >= max_repos:
             break
-    projects.sort(key=lambda p: p.get("_stars", 0), reverse=True)
 
-    for p in projects:
+    # Sort by stars desc (internal field), then remove helper
+    new_projects.sort(key=lambda p: p.get("_stars", 0), reverse=True)
+    for p in new_projects:
         p.pop("_stars", None)
 
-    ocd: Dict[str, Any] = {
-        "spec_version": spec_version,
-        "generated_at": now_rfc3339(),
-        "organization": {
-            "name": org_name,
-            "domain": domain,
-        },
-        "projects": projects,
-        "extensions": {},
-    }
+    # Start from existing or create new
+    if existing_ocd and isinstance(existing_ocd, dict):
+        ocd: Dict[str, Any] = dict(existing_ocd)  # shallow copy
+    else:
+        ocd = {}
 
+    # Ensure required top-level fields
+    ocd["spec_version"] = spec_version
+    ocd["generated_at"] = now_rfc3339()
+
+    # Organization: merge/preserve extra fields if present, but update name/domain/description
+    existing_org = ocd.get("organization") if isinstance(ocd.get("organization"), dict) else {}
+    org_obj: Dict[str, Any] = dict(existing_org) if isinstance(existing_org, dict) else {}
+
+    org_obj["name"] = org_name
+    org_obj["domain"] = domain
     if org_desc:
-        ocd["organization"]["description"] = org_desc
+        org_obj["description"] = org_desc
 
     # Optional org links (best-effort)
     links: Dict[str, str] = {}
     blog = org_data.get("blog")
     if isinstance(blog, str) and blog.strip():
-        # Sometimes "blog" is a homepage URL; keep it
         links["homepage"] = blog.strip()
     html_url = org_data.get("html_url")
     if isinstance(html_url, str) and html_url.strip():
         links["github_org"] = html_url.strip()
     if links:
-        ocd["organization"]["links"] = links
+        org_links = org_obj.get("links") if isinstance(org_obj.get("links"), dict) else {}
+        org_obj["links"] = deep_merge_preserve(org_links, links)
 
-    # Keep empty open_data/open_standards out (spec says optional)
+    ocd["organization"] = org_obj
+
+    # Projects: merge or replace
+    if replace_projects:
+        ocd["projects"] = new_projects
+    else:
+        existing_projects = ocd.get("projects") if isinstance(ocd.get("projects"), list) else []
+        merged = merge_projects(existing_projects, new_projects)
+        # Keep the merged list sorted by the GitHub stars ordering we already used (new_projects order):
+        # We can enforce that order by building a key->index map from new_projects.
+        order = {project_key(p): i for i, p in enumerate(new_projects)}
+        merged.sort(key=lambda p: order.get(project_key(p), 10**9))
+        ocd["projects"] = merged
+
+    # Ensure extensions exists (nice default)
+    if "extensions" not in ocd or not isinstance(ocd.get("extensions"), dict):
+        ocd["extensions"] = {}
+
     return ocd
 
 
+# ----------------------------
+# CLI
+# ----------------------------
+
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Generate OCD JSON from a GitHub organization.")
+    ap = argparse.ArgumentParser(description="Generate or update OCD JSON from a GitHub organization.")
     ap.add_argument("--org", required=True, help="GitHub organization login (e.g., 'mozilla').")
     ap.add_argument("--domain", required=True, help="Organization domain hosting /.well-known/open-contributions.json (e.g., example.org).")
     ap.add_argument("--spec-version", default=DEFAULT_SPEC_VERSION, help="OCD spec version (default: 1.0).")
     ap.add_argument("--output", default="-", help="Output file path, or '-' for stdout (default).")
+
+    ap.add_argument(
+        "--input",
+        default=None,
+        help="Existing OCD JSON file path or URL to update (optional). If provided, non-project sections are preserved.",
+    )
+
+    mode = ap.add_mutually_exclusive_group()
+    mode.add_argument("--merge-projects", action="store_true", help="Merge projects into existing OCD (default).")
+    mode.add_argument("--replace-projects", action="store_true", help="Replace projects entirely with GitHub-derived list.")
+
     ap.add_argument("--include-forks", action="store_true", help="Include forked repositories.")
     ap.add_argument("--include-archived", action="store_true", help="Include archived repositories.")
     ap.add_argument("--max-repos", type=int, default=None, help="Limit number of repos processed (debug/testing).")
@@ -358,6 +438,23 @@ def main() -> int:
 
     token = os.environ.get("GITHUB_TOKEN")
     gh = GitHubClient.create(token=token)
+
+    existing_ocd: Optional[Dict[str, Any]] = None
+    if args.input:
+        try:
+            loaded = load_json_from_path_or_url(args.input)
+            if isinstance(loaded, dict):
+                existing_ocd = loaded
+            else:
+                raise ValueError("Input JSON must be a JSON object at the top level.")
+        except Exception as e:
+            print(f"ERROR: Failed to load --input: {e}", file=sys.stderr)
+            return 2
+
+    replace = bool(args.replace_projects)
+    # default to merge if input exists (or if user requested merge explicitly)
+    if args.merge_projects:
+        replace = False
 
     try:
         ocd = build_ocd(
@@ -368,6 +465,8 @@ def main() -> int:
             include_forks=args.include_forks,
             include_archived=args.include_archived,
             max_repos=args.max_repos,
+            existing_ocd=existing_ocd,
+            replace_projects=replace,
         )
     except Exception as e:
         print(f"ERROR: {e}", file=sys.stderr)
