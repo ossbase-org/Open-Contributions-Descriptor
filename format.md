@@ -24,7 +24,7 @@ The Open Contributions Descriptor provides a unified, extensible, and discoverab
 - Be extensible without breaking compatibility
 - Allow partial adoption
 
-Unknown fields MUST be ignored by consumers.
+Unknown fields MAY be ignored by consumers.
 
 # Top-Level Structure
 
