@@ -234,6 +234,202 @@ Describes participation in standards bodies.
 | `title` | Contribution title. |
 | `url` | Reference URL. |
 
+# Relationships Array
+
+The **Relationships** section allows an organization to declare structured relationships to other domains (which may also publish an OCD file under `/.well-known/open-contributions.json`), and to express how it relates to:
+
+- other organizations (e.g., maintainers, partners, foundations)
+- specific projects hosted elsewhere (e.g., co-maintained repositories, upstream dependencies, supported tools)
+
+This section is designed to support **ecosystem mapping**, **governance transparency**, and **machine-readable attribution** of stewardship and contribution.
+
+## Top-level field
+
+Add an optional top-level field:
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `relationships` | array | NO | List of relationships to external organizations and/or external projects. |
+
+Consumers MUST ignore unknown fields.
+
+## Relationship Object
+
+Each entry in `relationships[]` describes one relationship.
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `type` | enum | YES | Relationship type describing the role/interaction. |
+| `target` | object | YES | The related entity (organization or project). |
+| `since` | string (RFC3339 date or date-time) | NO | When the relationship started. |
+| `until` | string (RFC3339 date or date-time) | NO | When the relationship ended (if applicable). |
+| `description` | string | NO | Human-readable explanation. |
+| `evidence` | array | NO | URLs supporting the claim (policy pages, announcements, repo permissions, etc.). |
+| `contacts` | array | NO | Contacts for this relationship (useful for coordination). |
+| `tags` | array | NO | Keywords for classification and search. |
+| `extensions` | object | NO | Relationship-specific extensions. |
+
+### Relationship `type` enum
+
+Recommended controlled vocabulary:
+
+| Value | Meaning |
+|---|---|
+| `maintains` | This organization is the primary maintainer/steward of the target. |
+| `co_maintains` | This organization shares maintenance responsibility with others. |
+| `supports` | This organization provides support (funding, infra, CI, moderation, services, etc.). |
+| `contributes_to` | This organization contributes regularly but is not a maintainer. |
+| `sponsors` | This organization sponsors the target financially or via in-kind resources. |
+| `upstream_of` | Target is upstream of this organization’s project(s). |
+| `downstream_of` | Target is downstream (depends on this organization’s work). |
+| `member_of` | This organization is a member of the target organization/consortium. |
+| `affiliated_with` | Non-governance affiliation (strategic alignment, partnership). |
+
+## Target Object
+
+The `target` object identifies the related entity. It can describe either:
+
+- a **domain/organization**, or
+- a **specific project**.
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `kind` | enum | YES | Either `organization` or `project`. |
+| `name` | string | YES | Display name of the target. |
+| `domain` | string | NO | Domain of the target organization (recommended for `organization`). |
+| `ocd` | string (URL) | NO | URL to the target’s OCD file (recommended when known). |
+| `url` | string (URL) | NO | Canonical human-readable URL for the target. |
+| `project` | object | NO | Project identifier (required when `kind=project`). |
+
+
+### Target `kind` enum
+
+| Value | Meaning |
+|---|---|
+| `organization` | The relationship is to an organization/domain. |
+| `project` | The relationship is to a specific project. |
+
+## Target Project Object
+
+When `target.kind` is `project`, include a `target.project` object.
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `repository_url` | string (URL) | NO | Canonical repository URL (recommended when applicable). |
+| `homepage` | string (URL) | NO | Project homepage/project page URL. |
+| `license` | string | NO | SPDX license identifier (if known). |
+
+## Evidence Object (optional)
+
+`evidence[]` is an array of URLs (or objects) that support the relationship.
+
+
+### Simple form (recommended)
+
+```json
+"evidence": [
+  "https://example.org/open/governance",
+  "https://github.com/org/repo/graphs/contributors"
+]
+```
+
+
+### Structured form (optional)
+
+| Field | Type | Description |
+|---|---|---|
+| `url` | string (URL) | Evidence URL. |
+| `label` | string | Short label for humans. |
+| `type` | string | Evidence type (e.g., `policy`, `announcement`, `repo-metadata`). |
+
+Example:
+
+```json
+"evidence": [
+  {
+    "url": "https://consortium.example/members",
+    "label": "Member list",
+    "type": "policy"
+  }
+]
+```
+
+## Example Relationships Section
+
+```json
+"relationships": [
+  {
+    "type": "co_maintains",
+    "description": "We co-maintain the upstream project with the foundation and another OSPO.",
+    "since": "2023-05-01",
+    "target": {
+      "kind": "project",
+      "name": "Upstream Tooling",
+      "url": "https://upstream.example.net/tooling",
+      "ocd": "https://upstream.example.net/.well-known/open-contributions.json",
+      "project": {
+        "repository_url": "https://github.com/upstream/tooling",
+        "homepage": "https://upstream.example.net/tooling",
+        "license": "MPL-2.0"
+      }
+    },
+    "evidence": [
+      "https://github.com/upstream/tooling/blob/main/MAINTAINERS.md",
+      "https://github.com/upstream/tooling/graphs/contributors"
+    ],
+    "contacts": [
+      { "email": "opensource@example.org" }
+    ],
+    "tags": ["governance", "maintenance"]
+  },
+    {
+    "type": "member_of",
+    "description": "We are a member of the consortium operating the standard.",
+    "since": "2024-01-15",
+    "target": {
+      "kind": "organization",
+      "name": "Example Standards Consortium",
+      "domain": "consortium.example",
+      "ocd": "https://consortium.example/.well-known/open-contributions.json",
+      "url": "https://consortium.example"
+    },
+    "evidence": [
+      {
+        "url": "https://consortium.example/members",
+        "label": "Member list",
+        "type": "policy"
+      }
+    ],
+    "tags": ["standards", "consortium"]
+  },
+  {
+    "type": "supports",
+    "description": "We provide CI runners and hosting for the community project.",
+    "target": {
+      "kind": "project",
+      "name": "Community Feed Parser",
+      "project": {
+        "repository_url": "https://github.com/community/feed-parser"
+      }
+    },
+    "evidence": [
+      "https://example.org/open/infrastructure-support"
+    ]
+  }
+]
+```
+
+## Contacts in Relationships
+
+`contacts[]` is an array of contact objects, reusing the same shape as top-level contacts:
+
+| Field | Type | Description |
+|---|---|---|
+| `email` | string | Email address. |
+| `url` | string (URL) | Contact webpage. |
+
+
+
 # Extensions Object
 
 Allows custom additions without breaking compatibility.
@@ -466,45 +662,44 @@ Example:
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.org/schemas/open-contributions-descriptor-1.0.schema.json",
   "title": "Open Contributions Descriptor (OCD)",
-  "description": "Machine-readable descriptor for an organization's open source projects, open data publications, and open standards participation.",
+  "description": "Machine-readable descriptor for an organization's open source projects, open data publications, open standards participation, and relationships.",
   "type": "object",
   "additionalProperties": true,
-
   "required": ["spec_version", "generated_at", "organization"],
-
   "properties": {
     "spec_version": {
       "type": "string",
       "description": "Version of the OCD specification implemented by this document.",
       "minLength": 1
     },
-
     "generated_at": {
       "type": "string",
       "description": "Timestamp indicating when the file was generated (RFC 3339 date-time).",
       "format": "date-time"
     },
-
     "organization": { "$ref": "#/$defs/organization" },
     "contacts": { "$ref": "#/$defs/contacts" },
     "policies": { "$ref": "#/$defs/policies" },
-
     "projects": {
       "type": "array",
       "description": "List of open source projects maintained or contributed to.",
       "items": { "$ref": "#/$defs/project" }
     },
-
     "open_data": {
       "type": "array",
       "description": "Published open datasets and feeds.",
       "items": { "$ref": "#/$defs/openData" }
     },
-
     "open_standards": {
       "type": "array",
       "description": "Participation in standards organizations or specifications.",
       "items": { "$ref": "#/$defs/openStandards" }
+    },
+
+    "relationships": {
+      "type": "array",
+      "description": "Relationships to external organizations and/or external projects.",
+      "items": { "$ref": "#/$defs/relationship" }
     },
 
     "extensions": {
@@ -515,17 +710,8 @@ Example:
   },
 
   "$defs": {
-    "url": {
-      "type": "string",
-      "format": "uri",
-      "minLength": 1
-    },
-
-    "email": {
-      "type": "string",
-      "format": "email",
-      "minLength": 3
-    },
+    "url": { "type": "string", "format": "uri", "minLength": 1 },
+    "email": { "type": "string", "format": "email", "minLength": 3 },
 
     "tags": {
       "type": "array",
@@ -579,10 +765,7 @@ Example:
         "email": { "$ref": "#/$defs/email" },
         "url": { "$ref": "#/$defs/url" }
       },
-      "anyOf": [
-        { "required": ["email"] },
-        { "required": ["url"] }
-      ]
+      "anyOf": [{ "required": ["email"] }, { "required": ["url"] }]
     },
 
     "policies": {
@@ -603,13 +786,11 @@ Example:
       "properties": {
         "name": { "type": "string", "minLength": 1 },
         "description": { "type": "string", "minLength": 1 },
-
         "status": {
           "type": "string",
           "description": "Lifecycle status of the project.",
           "enum": ["active", "archived", "disabled"]
         },
-
         "repository": { "$ref": "#/$defs/repository" },
         "links": { "$ref": "#/$defs/projectLinks" },
         "participate": { "$ref": "#/$defs/participate" },
@@ -625,11 +806,7 @@ Example:
       "required": ["url", "license"],
       "properties": {
         "url": { "$ref": "#/$defs/url" },
-        "license": {
-          "type": "string",
-          "description": "SPDX license identifier (recommended).",
-          "minLength": 1
-        },
+        "license": { "type": "string", "minLength": 1 },
         "type": { "type": "string", "minLength": 1 },
         "clone": { "$ref": "#/$defs/url" },
         "tests": { "$ref": "#/$defs/url" }
@@ -699,20 +876,13 @@ Example:
         "description": { "type": "string" },
         "license": { "type": "string", "minLength": 1 },
         "publisher": { "type": "string" },
-
         "urls": { "$ref": "#/$defs/openDataUrls" },
-
         "formats": {
           "type": "array",
           "items": { "type": "string", "minLength": 1 },
           "uniqueItems": true
         },
-
-        "update_frequency": {
-          "type": "string",
-          "description": "Publication cadence (e.g., daily, weekly, monthly)."
-        },
-
+        "update_frequency": { "type": "string" },
         "schema": { "$ref": "#/$defs/url" },
         "tags": { "$ref": "#/$defs/tags" }
       }
@@ -726,11 +896,7 @@ Example:
         "download": { "$ref": "#/$defs/url" },
         "api": { "$ref": "#/$defs/url" }
       },
-      "anyOf": [
-        { "required": ["download"] },
-        { "required": ["api"] },
-        { "required": ["landing_page"] }
-      ]
+      "anyOf": [{ "required": ["download"] }, { "required": ["api"] }, { "required": ["landing_page"] }]
     },
 
     "openStandards": {
@@ -739,18 +905,15 @@ Example:
       "required": ["body"],
       "properties": {
         "body": { "type": "string", "minLength": 1 },
-
         "working_groups": {
           "type": "array",
           "items": { "type": "string", "minLength": 1 },
           "uniqueItems": true
         },
-
         "contributions": {
           "type": "array",
           "items": { "$ref": "#/$defs/standardsContribution" }
         },
-
         "contacts": {
           "type": "array",
           "items": { "$ref": "#/$defs/contact" }
@@ -763,13 +926,125 @@ Example:
       "additionalProperties": true,
       "required": ["type", "title", "url"],
       "properties": {
-        "type": {
-          "type": "string",
-          "description": "Contribution type (e.g., draft-author, editor, implementation, review).",
-          "minLength": 1
-        },
+        "type": { "type": "string", "minLength": 1 },
         "title": { "type": "string", "minLength": 1 },
         "url": { "$ref": "#/$defs/url" }
+      }
+    },
+
+    "relationship": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["type", "target"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Relationship type describing the role/interaction.",
+          "enum": [
+            "maintains",
+            "co_maintains",
+            "supports",
+            "contributes_to",
+            "sponsors",
+            "upstream_of",
+            "downstream_of",
+            "member_of",
+            "affiliated_with"
+          ]
+        },
+        "target": { "$ref": "#/$defs/relationshipTarget" },
+
+        "since": {
+          "type": "string",
+          "description": "When the relationship started (RFC3339 date or date-time).",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}([T ].*)?$"
+        },
+        "until": {
+          "type": "string",
+          "description": "When the relationship ended (RFC3339 date or date-time).",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}([T ].*)?$"
+        },
+
+        "description": { "type": "string" },
+
+        "evidence": {
+          "type": "array",
+          "description": "Evidence supporting the relationship (URLs or objects).",
+          "items": {
+            "oneOf": [
+              { "$ref": "#/$defs/url" },
+              { "$ref": "#/$defs/evidenceObject" }
+            ]
+          }
+        },
+
+        "contacts": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/contact" }
+        },
+
+        "tags": { "$ref": "#/$defs/tags" },
+
+        "extensions": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+
+    "relationshipTarget": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["kind", "name"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["organization", "project"]
+        },
+        "name": { "type": "string", "minLength": 1 },
+        "domain": { "type": "string", "minLength": 1 },
+        "ocd": { "$ref": "#/$defs/url" },
+        "url": { "$ref": "#/$defs/url" },
+        "project": { "$ref": "#/$defs/relationshipTargetProject" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "project" } }, "required": ["kind"] },
+          "then": { "required": ["project"] }
+        }
+      ]
+    },
+
+    "relationshipTargetProject": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "repository_url": { "$ref": "#/$defs/url" },
+        "homepage": { "$ref": "#/$defs/url" },
+        "license": { "type": "string", "minLength": 1 },
+        "identifiers": { "$ref": "#/$defs/relationshipTargetProjectIdentifiers" }
+      }
+    },
+
+    "relationshipTargetProjectIdentifiers": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "pypi": { "type": "string", "minLength": 1 },
+        "npm": { "type": "string", "minLength": 1 },
+        "maven": { "type": "string", "minLength": 1 },
+        "docker": { "type": "string", "minLength": 1 }
+      }
+    },
+
+    "evidenceObject": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["url"],
+      "properties": {
+        "url": { "$ref": "#/$defs/url" },
+        "label": { "type": "string" },
+        "type": { "type": "string" }
       }
     }
   }
