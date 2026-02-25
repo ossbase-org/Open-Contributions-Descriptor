@@ -9,11 +9,11 @@
       "homepage": "https://www.misp-project.org",
       "github_org": "https://github.com/MISP",
       "security": "https://www.misp-project.org/security/"
-    },
-    "policies": {
-      "vulnerability_disclosure": "https://www.misp-project.org/security/",
-      "license_policy": "https://www.misp-project.org/license/"
     }
+  },
+  "policies": {
+    "vulnerability_disclosure": "https://www.misp-project.org/security/",
+    "license_policy": "https://www.misp-project.org/license/"
   },
   "projects": [
     {
