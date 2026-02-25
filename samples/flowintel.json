@@ -1,0 +1,206 @@
+{
+  "spec_version": "1.0",
+  "generated_at": "2026-02-25T14:45:14Z",
+  "organization": {
+    "name": "flowintel",
+    "domain": "flowintel.org",
+    "description": "Organize your intelligence flow",
+    "links": {
+      "github_org": "https://github.com/flowintel"
+    }
+  },
+  "projects": [
+    {
+      "name": "flowintel",
+      "description": "An open source platform to support analysts to organise their case and tasks",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/flowintel/flowintel",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/flowintel/flowintel.git"
+      },
+      "links": {
+        "project_page": "https://flowintel.github.io/flowintel-doc",
+        "releases": "https://github.com/flowintel/flowintel/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/flowintel/flowintel/issues",
+        "good_first_issues": "https://github.com/flowintel/flowintel/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/flowintel/flowintel/releases",
+        "security_policy": "https://github.com/flowintel/flowintel/security/policy"
+      },
+      "tags": [
+        "case-management",
+        "flowintel",
+        "incident-response",
+        "threatintel"
+      ]
+    },
+    {
+      "name": "cocktailparty",
+      "description": "CocktailParty is a data broker system based on phoenix framework",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/flowintel/cocktailparty",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/flowintel/cocktailparty.git"
+      },
+      "links": {
+        "releases": "https://github.com/flowintel/cocktailparty/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/flowintel/cocktailparty/issues",
+        "good_first_issues": "https://github.com/flowintel/cocktailparty/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/flowintel/cocktailparty/releases",
+        "security_policy": "https://github.com/flowintel/cocktailparty/security/policy"
+      }
+    },
+    {
+      "name": "benthos",
+      "description": "No description provided.",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/flowintel/benthos",
+        "license": "MIT",
+        "type": "git",
+        "clone": "https://github.com/flowintel/benthos.git"
+      },
+      "links": {
+        "releases": "https://github.com/flowintel/benthos/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/flowintel/benthos/issues",
+        "good_first_issues": "https://github.com/flowintel/benthos/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/flowintel/benthos/releases",
+        "security_policy": "https://github.com/flowintel/benthos/security/policy"
+      }
+    },
+    {
+      "name": "flowintel-doc",
+      "description": "Flowintel documentation site",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/flowintel/flowintel-doc",
+        "license": "NOASSERTION",
+        "type": "git",
+        "clone": "https://github.com/flowintel/flowintel-doc.git"
+      },
+      "links": {
+        "project_page": "https://flowintel.github.io/flowintel-doc",
+        "releases": "https://github.com/flowintel/flowintel-doc/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/flowintel/flowintel-doc/issues",
+        "good_first_issues": "https://github.com/flowintel/flowintel-doc/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/flowintel/flowintel-doc/releases",
+        "security_policy": "https://github.com/flowintel/flowintel-doc/security/policy"
+      },
+      "tags": [
+        "flowintel"
+      ]
+    },
+    {
+      "name": "flowintel-roadmap",
+      "description": "Roadmap of https://github.com/flowintel/flowintel",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/flowintel/flowintel-roadmap",
+        "license": "NOASSERTION",
+        "type": "git",
+        "clone": "https://github.com/flowintel/flowintel-roadmap.git"
+      },
+      "links": {
+        "releases": "https://github.com/flowintel/flowintel-roadmap/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/flowintel/flowintel-roadmap/issues",
+        "good_first_issues": "https://github.com/flowintel/flowintel-roadmap/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/flowintel/flowintel-roadmap/releases",
+        "security_policy": "https://github.com/flowintel/flowintel-roadmap/security/policy"
+      }
+    },
+    {
+      "name": "flowintel-cm-neo",
+      "description": "Matrix bot that can interact with flowintel-cm",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/flowintel/flowintel-cm-neo",
+        "license": "NOASSERTION",
+        "type": "git",
+        "clone": "https://github.com/flowintel/flowintel-cm-neo.git"
+      },
+      "links": {
+        "releases": "https://github.com/flowintel/flowintel-cm-neo/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/flowintel/flowintel-cm-neo/issues",
+        "good_first_issues": "https://github.com/flowintel/flowintel-cm-neo/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/flowintel/flowintel-cm-neo/releases",
+        "security_policy": "https://github.com/flowintel/flowintel-cm-neo/security/policy"
+      }
+    },
+    {
+      "name": "flowintel-logos",
+      "description": "No description provided.",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/flowintel/flowintel-logos",
+        "license": "NOASSERTION",
+        "type": "git",
+        "clone": "https://github.com/flowintel/flowintel-logos.git"
+      },
+      "links": {
+        "releases": "https://github.com/flowintel/flowintel-logos/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/flowintel/flowintel-logos/issues",
+        "good_first_issues": "https://github.com/flowintel/flowintel-logos/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/flowintel/flowintel-logos/releases",
+        "security_policy": "https://github.com/flowintel/flowintel-logos/security/policy"
+      }
+    },
+    {
+      "name": "flowintel.org",
+      "description": "Flowintel website",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/flowintel/flowintel.org",
+        "license": "NOASSERTION",
+        "type": "git",
+        "clone": "https://github.com/flowintel/flowintel.org.git"
+      },
+      "links": {
+        "project_page": "https://www.flowintel.org",
+        "releases": "https://github.com/flowintel/flowintel.org/releases"
+      },
+      "participate": {
+        "issues": "https://github.com/flowintel/flowintel.org/issues",
+        "good_first_issues": "https://github.com/flowintel/flowintel.org/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22"
+      },
+      "release": {
+        "changelog": "https://github.com/flowintel/flowintel.org/releases",
+        "security_policy": "https://github.com/flowintel/flowintel.org/security/policy"
+      },
+      "tags": [
+        "flowintel"
+      ]
+    }
+  ],
+  "extensions": {}
+}
