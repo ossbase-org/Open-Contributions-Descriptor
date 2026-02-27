@@ -14,6 +14,8 @@ The goal of OCD is to make organizational openness **discoverable, interoperable
 
 The format is described at [format.md](format.md) and described in the JSON schema at [ocd-schema.json](./schema/ocd-schema.json)
 
+An online viewer and editor is available at: [https://ossbase-org.github.io/ocd-viewer/app/home.html](https://ossbase-org.github.io/ocd-viewer/app/home.html)
+
 ## Why OCD?
 
 Organizations contribute to openness in many ways, but this information is usually scattered across websites, repositories, documentation portals, and standards bodies.
