@@ -41,6 +41,8 @@ An example with the MISP Project: [https://www.misp-project.org/.well-known/open
 
 This enables automatic discovery by tools, catalogs, and ecosystem services.
 
+A practical publishing guide for contributors and maintainers is available at [discoverability.md](discoverability.md).
+
 ## What OCD Describes
 
 ### Organization Metadata
