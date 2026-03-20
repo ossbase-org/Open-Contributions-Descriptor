@@ -14,6 +14,9 @@ The goal of OCD is to make organizational openness **discoverable, interoperable
 
 The format is described at [format.md](format.md) and described in the JSON schema at [ocd-schema.json](./schema/ocd-schema.json)
 
+An Internet-Draft-oriented version of the specification written in the mmark
+format is available at [draft-open-contributions-descriptor.md](draft-open-contributions-descriptor.md).
+
 An online viewer and editor is available at: [https://ossbase-org.github.io/ocd-viewer/app/home.html](https://ossbase-org.github.io/ocd-viewer/app/home.html)
 
 ## Why OCD?
@@ -98,4 +101,3 @@ The format is intentionally extensible:
 - organizations MAY add custom namespaces under `extensions`
 
 This allows experimentation without breaking compatibility.
-
