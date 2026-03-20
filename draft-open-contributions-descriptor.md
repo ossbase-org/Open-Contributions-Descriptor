@@ -5,20 +5,31 @@ ipr = "trust200902"
 area = "Internet"
 workgroup = "Open Contributions Descriptor"
 keyword = ["open source", "open data", "standards", "well-known"]
+docName = "draft-dulaunoy-open-contributions-descriptor"
+submissiontype = "independent"
+category = "info"
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "draft-open-contributions-descriptor-00"
 status = "informational"
-stream = "IETF"
+stream = "independent"
+value = "draft-00"
 
 [[author]]
-initials = "O."
-surname = "Contributor"
-fullname = "Open Contributions Descriptor Editors"
-organization = "Open Contributions Descriptor"
-  [author.address]
-  uri = "https://github.com/ossbase-org/Open-Contributions-Descriptor"
+initials="A."
+surname="Dulaunoy"
+fullname="Alexandre Dulaunoy"
+abbrev="CIRCL"
+organization = "Computer Incident Response Center Luxembourg"
+ [author.address]
+ email = "alexandre.dulaunoy@circl.lu"
+ phone = "+352 247 88444"
+ [author.address.postal]
+ street = "122, rue Adolphe Fischer"
+ city = "Luxembourg"
+ code = "L-1521"
+ country = "Luxembourg"
+
 %%%
 
 .# Abstract
@@ -36,7 +47,7 @@ support automated discovery, indexing, and ecosystem analysis.
 .# Note to Readers
 
 This Internet-Draft is derived from the working specification maintained by
-the Open Contributions Descriptor project in its public Git repository.
+the Open Contributions Descriptor project in its [public Git repository](https://github.com/ossbase-org/Open-Contributions-Descriptor).
 
 {mainmatter}
 
@@ -562,7 +573,18 @@ privacy impact of any personal data included in OCD documents.
 
 # IANA Considerations
 
-This document has no IANA actions.
+IANA is requested to register the well-known URI suffix `open-contributions.json` in the "Well-Known URIs" registry established by RFC 8615.
+
+The registry entry should include the following information:
+
+* URI suffix: `open-contributions.json`
+* Change controller: [OSSBASE](https://ossbase.org/)
+* Specification document(s): This document
+
+This well-known resource is used to discover a JSON document describing an organization's open contributions profile.
+
+A registration request for this well-known URI suffix has been filed and is tracked at:
+https://github.com/protocol-registries/well-known-uris/issues/78
 
 {backmatter}
 
