@@ -1,0 +1,1251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- name="GENERATOR" content="github.com/mmarkdown/mmark Mmark Markdown Processor - mmark.miek.nl" -->
+<rfc version="3" ipr="trust200902" docName="draft-dulaunoy-open-contributions-descriptor-00" submissionType="independent" category="info" xml:lang="en" xmlns:xi="http://www.w3.org/2001/XInclude" indexInclude="true">
+
+<front>
+<title abbrev="Open Contributions Descriptor">The Open Contributions Descriptor</title><seriesInfo value="draft-dulaunoy-open-contributions-descriptor-00" stream="independent" status="informational" name="Internet-Draft"></seriesInfo>
+<author initials="A." surname="Dulaunoy" fullname="Alexandre Dulaunoy"><organization abbrev="CIRCL">Computer Incident Response Center Luxembourg</organization><address><postal><street>122, rue Adolphe Fischer</street>
+<city>Luxembourg</city>
+<code>L-1521</code>
+<country>Luxembourg</country>
+</postal><phone>+352 247 88444</phone>
+<email>alexandre.dulaunoy@circl.lu</email>
+</address></author><date/>
+<area>Internet</area>
+<workgroup></workgroup>
+<keyword>open source</keyword>
+<keyword>open data</keyword>
+<keyword>standards</keyword>
+<keyword>well-known</keyword>
+
+<abstract>
+<t>This document defines the Open Contributions Descriptor (OCD), a JSON
+format for publishing machine-readable metadata about an organization's
+participation in the open ecosystem. OCD allows organizations to publish a
+single discovery document describing open source projects, open data
+publications, open standards participation, contact information, governance
+material, and declared relationships to external organizations and projects.</t>
+<t>OCD is intended to be published at a predictable well-known location to
+support automated discovery, indexing, and ecosystem analysis.</t>
+</abstract>
+
+<note><name>Note to Readers</name>
+<t>This Internet-Draft is derived from the working specification maintained by
+the Open Contributions Descriptor project in its <eref target="https://github.com/ossbase-org/Open-Contributions-Descriptor">public Git repository</eref>.</t>
+</note>
+
+</front>
+
+<middle>
+
+<section anchor="introduction"><name>Introduction</name>
+<t>Organizations participate in the open ecosystem in many different ways,
+including by maintaining software, publishing datasets, contributing to
+standards, documenting governance, and supporting external communities.
+Today, this information is usually fragmented across websites, forge hosting
+platforms, policy pages, and standards organization portals.</t>
+<t>The Open Contributions Descriptor (OCD) defines a single JSON <xref target="RFC8259"></xref> document that
+aggregates this information in a predictable format. OCD is intended for both
+human readers and automated tooling. Example use cases include:</t>
+
+<ul spacing="compact">
+<li>organizational open-source program office inventories;</li>
+<li>cataloging of open data and public APIs;</li>
+<li>ecosystem mapping and stewardship analysis;</li>
+<li>transparency around standards participation; and</li>
+<li>automated discovery of contribution entry points and contact channels.</li>
+</ul>
+<t>The design goals of OCD are:</t>
+
+<ul spacing="compact">
+<li>provide a single discovery endpoint for organizational open activities;</li>
+<li>support both human discovery and machine automation;</li>
+<li>remain extensible without breaking compatibility; and</li>
+<li>allow partial adoption where only some sections are populated.</li>
+</ul>
+</section>
+
+<section anchor="conventions-and-definitions"><name>Conventions and Definitions</name>
+<t>The key words &quot;<bcp14>MUST</bcp14>&quot;, &quot;<bcp14>MUST NOT</bcp14>&quot;, &quot;<bcp14>REQUIRED</bcp14>&quot;, &quot;<bcp14>SHALL</bcp14>&quot;,
+&quot;<bcp14>SHALL NOT</bcp14>&quot;, &quot;<bcp14>SHOULD</bcp14>&quot;, &quot;<bcp14>SHOULD NOT</bcp14>&quot;, &quot;<bcp14>RECOMMENDED</bcp14>&quot;,
+&quot;<bcp14>NOT RECOMMENDED</bcp14>&quot;, &quot;<bcp14>MAY</bcp14>&quot;, and &quot;<bcp14>OPTIONAL</bcp14>&quot; in this document are to
+be interpreted as described in BCP 14 <xref target="RFC2119"></xref> <xref target="RFC8174"></xref> when, and only
+when, they appear in all capitals, as shown here.</t>
+<t>The underlying representation of OCD is JSON as defined by <xref target="RFC8259"></xref>. Date
+and date-time values use RFC 3339 formatting <xref target="RFC3339"></xref>.</t>
+</section>
+
+<section anchor="publication-and-discovery"><name>Publication and Discovery</name>
+<t>An OCD document is intended to be published at the following location:</t>
+
+<artwork><![CDATA[https://<organization-domain>/.well-known/open-contributions.json
+]]>
+</artwork>
+<t>The use of the <tt>/.well-known/</tt> path follows the general mechanism defined in
+<xref target="RFC8615"></xref>. Organizations MAY publish the same content at additional
+locations, but the well-known location is the canonical discovery endpoint.</t>
+</section>
+
+<section anchor="document-model"><name>Document Model</name>
+<t>An OCD document is a UTF-8 encoded JSON object. Unknown members MAY appear in
+an OCD document. Consumers <bcp14>MUST</bcp14> ignore members they do not understand,
+unless a profile or extension explicitly defines stricter processing rules.</t>
+<t>The top-level object has the following members.</t>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>spec_version</tt></td>
+<td>string</td>
+<td>REQUIRED</td>
+<td>Version of the OCD specification implemented by the document.</td>
+</tr>
+
+<tr>
+<td><tt>generated_at</tt></td>
+<td>string</td>
+<td>REQUIRED</td>
+<td>Timestamp indicating when the document was generated.</td>
+</tr>
+
+<tr>
+<td><tt>organization</tt></td>
+<td>object</td>
+<td>REQUIRED</td>
+<td>Metadata describing the publishing organization.</td>
+</tr>
+
+<tr>
+<td><tt>contacts</tt></td>
+<td>object</td>
+<td>OPTIONAL</td>
+<td>Contact information related to open activities.</td>
+</tr>
+
+<tr>
+<td><tt>policies</tt></td>
+<td>object</td>
+<td>OPTIONAL</td>
+<td>Organizational policies relevant to openness and participation.</td>
+</tr>
+
+<tr>
+<td><tt>projects</tt></td>
+<td>array</td>
+<td>OPTIONAL</td>
+<td>Open source projects maintained or contributed to.</td>
+</tr>
+
+<tr>
+<td><tt>open_data</tt></td>
+<td>array</td>
+<td>OPTIONAL</td>
+<td>Published open datasets and feeds.</td>
+</tr>
+
+<tr>
+<td><tt>open_standards</tt></td>
+<td>array</td>
+<td>OPTIONAL</td>
+<td>Participation in standards organizations or specifications.</td>
+</tr>
+
+<tr>
+<td><tt>relationships</tt></td>
+<td>array</td>
+<td>OPTIONAL</td>
+<td>Relationships to external organizations and projects.</td>
+</tr>
+
+<tr>
+<td><tt>extensions</tt></td>
+<td>object</td>
+<td>OPTIONAL</td>
+<td>Organization-specific extensions.</td>
+</tr>
+</tbody>
+</table>
+<section anchor="spec-version"><name><tt>spec_version</tt></name>
+<t>The <tt>spec_version</tt> member identifies the version of the OCD specification used
+by the document.</t>
+</section>
+
+<section anchor="generated-at"><name><tt>generated_at</tt></name>
+<t>The <tt>generated_at</tt> member <bcp14>MUST</bcp14> be an RFC 3339 date-time string.</t>
+</section>
+
+<section anchor="organization"><name><tt>organization</tt></name>
+<t>The <tt>organization</tt> object describes the entity publishing the descriptor.</t>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>name</tt></td>
+<td>string</td>
+<td>REQUIRED</td>
+<td>Official organization name.</td>
+</tr>
+
+<tr>
+<td><tt>domain</tt></td>
+<td>string</td>
+<td>REQUIRED</td>
+<td>Primary domain hosting the descriptor.</td>
+</tr>
+
+<tr>
+<td><tt>description</tt></td>
+<td>string</td>
+<td>OPTIONAL</td>
+<td>Short description of the organization.</td>
+</tr>
+
+<tr>
+<td><tt>country</tt></td>
+<td>string</td>
+<td>OPTIONAL</td>
+<td>ISO 3166-1 alpha-2 country code.</td>
+</tr>
+
+<tr>
+<td><tt>links</tt></td>
+<td>object</td>
+<td>OPTIONAL</td>
+<td>Public organizational links.</td>
+</tr>
+</tbody>
+</table>
+<section anchor="organization-links"><name><tt>organization.links</tt></name>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>homepage</tt></td>
+<td>Main organizational website.</td>
+</tr>
+
+<tr>
+<td><tt>opensource_page</tt></td>
+<td>Dedicated open-source or OSPO page.</td>
+</tr>
+
+<tr>
+<td><tt>github_org</tt></td>
+<td>Primary source code organization profile.</td>
+</tr>
+</tbody>
+</table></section>
+</section>
+
+<section anchor="contacts"><name><tt>contacts</tt></name>
+<t>The <tt>contacts</tt> object provides points of contact relevant to the publishing
+organization's open activities.</t>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>opensource</tt></td>
+<td>object</td>
+<td>General open-source contact.</td>
+</tr>
+
+<tr>
+<td><tt>security</tt></td>
+<td>object</td>
+<td>Security disclosure reference; this SHOULD point to <tt>security.txt</tt> when applicable.</td>
+</tr>
+
+<tr>
+<td><tt>community</tt></td>
+<td>object</td>
+<td>Community engagement contact.</td>
+</tr>
+</tbody>
+</table><t>Each contact object MAY contain the following members.</t>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>email</tt></td>
+<td>string</td>
+<td>Contact email address.</td>
+</tr>
+
+<tr>
+<td><tt>url</tt></td>
+<td>string</td>
+<td>Contact webpage.</td>
+</tr>
+</tbody>
+</table></section>
+
+<section anchor="policies"><name><tt>policies</tt></name>
+<t>The <tt>policies</tt> object links to organizational governance and participation
+policies.</t>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>code_of_conduct</tt></td>
+<td>Community code of conduct.</td>
+</tr>
+
+<tr>
+<td><tt>contributing</tt></td>
+<td>Contribution guidelines.</td>
+</tr>
+
+<tr>
+<td><tt>vulnerability_disclosure</tt></td>
+<td>Vulnerability disclosure policy.</td>
+</tr>
+
+<tr>
+<td><tt>license_policy</tt></td>
+<td>Licensing strategy or guidance.</td>
+</tr>
+</tbody>
+</table></section>
+
+<section anchor="projects"><name><tt>projects</tt></name>
+<t>The <tt>projects</tt> member is an array of project objects. Each element describes
+one open source project.</t>
+
+<section anchor="project-object"><name>Project Object</name>
+<t>The following project members are defined.</t>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>name</tt></td>
+<td>string</td>
+<td>REQUIRED</td>
+<td>Project name.</td>
+</tr>
+
+<tr>
+<td><tt>description</tt></td>
+<td>string</td>
+<td>REQUIRED</td>
+<td>Short project description.</td>
+</tr>
+
+<tr>
+<td><tt>repository</tt></td>
+<td>object</td>
+<td>REQUIRED</td>
+<td>Source repository metadata.</td>
+</tr>
+
+<tr>
+<td><tt>links</tt></td>
+<td>object</td>
+<td>OPTIONAL</td>
+<td>Human-facing and machine-facing resources.</td>
+</tr>
+
+<tr>
+<td><tt>participate</tt></td>
+<td>object</td>
+<td>OPTIONAL</td>
+<td>External contribution entry points.</td>
+</tr>
+
+<tr>
+<td><tt>governance</tt></td>
+<td>object</td>
+<td>OPTIONAL</td>
+<td>Governance information.</td>
+</tr>
+
+<tr>
+<td><tt>release</tt></td>
+<td>object</td>
+<td>OPTIONAL</td>
+<td>Release and security lifecycle information.</td>
+</tr>
+
+<tr>
+<td><tt>status</tt></td>
+<td>string</td>
+<td>OPTIONAL</td>
+<td>Project lifecycle state.</td>
+</tr>
+
+<tr>
+<td><tt>tags</tt></td>
+<td>array</td>
+<td>OPTIONAL</td>
+<td>Keywords describing the project.</td>
+</tr>
+</tbody>
+</table><t>Valid values for <tt>status</tt> are:</t>
+
+<ul spacing="compact">
+<li><tt>active</tt>: maintained and accepting contributions;</li>
+<li><tt>archived</tt>: no active development but preserved; and</li>
+<li><tt>disabled</tt>: service or project no longer available.</li>
+</ul>
+</section>
+
+<section anchor="repository"><name><tt>repository</tt></name>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>url</tt></td>
+<td>REQUIRED</td>
+<td>Canonical repository URL.</td>
+</tr>
+
+<tr>
+<td><tt>license</tt></td>
+<td>REQUIRED</td>
+<td>SPDX license identifier.</td>
+</tr>
+
+<tr>
+<td><tt>type</tt></td>
+<td>OPTIONAL</td>
+<td>Repository type, for example <tt>git</tt>.</td>
+</tr>
+
+<tr>
+<td><tt>clone</tt></td>
+<td>OPTIONAL</td>
+<td>Clone URL.</td>
+</tr>
+
+<tr>
+<td><tt>tests</tt></td>
+<td>OPTIONAL</td>
+<td>Continuous integration or test URL.</td>
+</tr>
+</tbody>
+</table></section>
+
+<section anchor="links"><name><tt>links</tt></name>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>project_page</tt></td>
+<td>Canonical human-readable project page.</td>
+</tr>
+
+<tr>
+<td><tt>homepage</tt></td>
+<td>Organization-hosted overview page.</td>
+</tr>
+
+<tr>
+<td><tt>documentation</tt></td>
+<td>Official documentation.</td>
+</tr>
+
+<tr>
+<td><tt>demo</tt></td>
+<td>Live deployment or demo instance.</td>
+</tr>
+
+<tr>
+<td><tt>releases</tt></td>
+<td>Release or download page.</td>
+</tr>
+
+<tr>
+<td><tt>community</tt></td>
+<td>Chat, forum, or community hub.</td>
+</tr>
+
+<tr>
+<td><tt>metadata</tt></td>
+<td>Machine-consumable descriptors.</td>
+</tr>
+</tbody>
+</table></section>
+
+<section anchor="links-metadata"><name><tt>links.metadata</tt></name>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>openapi</tt></td>
+<td>URL to an OpenAPI description of the project API.</td>
+</tr>
+</tbody>
+</table><t>Additional metadata members MAY be added.</t>
+</section>
+
+<section anchor="participate"><name><tt>participate</tt></name>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>issues</tt></td>
+<td>Issue tracker URL.</td>
+</tr>
+
+<tr>
+<td><tt>good_first_issues</tt></td>
+<td>Beginner-friendly issues.</td>
+</tr>
+
+<tr>
+<td><tt>chat</tt></td>
+<td>Real-time communication channel.</td>
+</tr>
+
+<tr>
+<td><tt>docs</tt></td>
+<td>Contribution or developer documentation.</td>
+</tr>
+</tbody>
+</table></section>
+
+<section anchor="governance"><name><tt>governance</tt></name>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>maintainers</tt></td>
+<td>List of maintainer contacts.</td>
+</tr>
+
+<tr>
+<td><tt>codeowners</tt></td>
+<td>CODEOWNERS file location.</td>
+</tr>
+</tbody>
+</table></section>
+
+<section anchor="release"><name><tt>release</tt></name>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>changelog</tt></td>
+<td>Release history.</td>
+</tr>
+
+<tr>
+<td><tt>security_policy</tt></td>
+<td>Project security policy.</td>
+</tr>
+</tbody>
+</table></section>
+</section>
+
+<section anchor="open-data"><name><tt>open_data</tt></name>
+<t>The <tt>open_data</tt> member is an array of dataset objects.</t>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>name</tt></td>
+<td>string</td>
+<td>REQUIRED</td>
+<td>Dataset name.</td>
+</tr>
+
+<tr>
+<td><tt>description</tt></td>
+<td>string</td>
+<td>OPTIONAL</td>
+<td>Dataset summary.</td>
+</tr>
+
+<tr>
+<td><tt>license</tt></td>
+<td>string</td>
+<td>REQUIRED</td>
+<td>Data license, for example <tt>CC-BY-4.0</tt>.</td>
+</tr>
+
+<tr>
+<td><tt>publisher</tt></td>
+<td>string</td>
+<td>OPTIONAL</td>
+<td>Publishing entity.</td>
+</tr>
+
+<tr>
+<td><tt>urls</tt></td>
+<td>object</td>
+<td>REQUIRED</td>
+<td>Access points.</td>
+</tr>
+
+<tr>
+<td><tt>formats</tt></td>
+<td>array</td>
+<td>OPTIONAL</td>
+<td>Available formats.</td>
+</tr>
+
+<tr>
+<td><tt>update_frequency</tt></td>
+<td>string</td>
+<td>OPTIONAL</td>
+<td>Publication cadence.</td>
+</tr>
+
+<tr>
+<td><tt>schema</tt></td>
+<td>string</td>
+<td>OPTIONAL</td>
+<td>Schema definition URL.</td>
+</tr>
+
+<tr>
+<td><tt>tags</tt></td>
+<td>array</td>
+<td>OPTIONAL</td>
+<td>Dataset categories.</td>
+</tr>
+</tbody>
+</table>
+<section anchor="open-data-urls"><name><tt>open_data.urls</tt></name>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>landing_page</tt></td>
+<td>Human-readable dataset page.</td>
+</tr>
+
+<tr>
+<td><tt>download</tt></td>
+<td>Direct dataset download.</td>
+</tr>
+
+<tr>
+<td><tt>api</tt></td>
+<td>API endpoint.</td>
+</tr>
+</tbody>
+</table></section>
+</section>
+
+<section anchor="open-standards"><name><tt>open_standards</tt></name>
+<t>The <tt>open_standards</tt> member is an array describing participation in standards
+bodies.</t>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>body</tt></td>
+<td>string</td>
+<td>Standards organization, for example IETF or W3C.</td>
+</tr>
+
+<tr>
+<td><tt>working_groups</tt></td>
+<td>array</td>
+<td>Associated working groups.</td>
+</tr>
+
+<tr>
+<td><tt>contributions</tt></td>
+<td>array</td>
+<td>Contributions made.</td>
+</tr>
+
+<tr>
+<td><tt>contacts</tt></td>
+<td>array</td>
+<td>Standards participation contacts.</td>
+</tr>
+</tbody>
+</table>
+<section anchor="contributions"><name><tt>contributions</tt></name>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>type</tt></td>
+<td>Contribution type, such as <tt>draft-author</tt>, <tt>editor</tt>, <tt>implementation</tt>, or <tt>review</tt>.</td>
+</tr>
+
+<tr>
+<td><tt>title</tt></td>
+<td>Contribution title.</td>
+</tr>
+
+<tr>
+<td><tt>url</tt></td>
+<td>Reference URL.</td>
+</tr>
+</tbody>
+</table></section>
+</section>
+
+<section anchor="relationships"><name><tt>relationships</tt></name>
+<t>The <tt>relationships</tt> member allows an organization to declare structured
+relationships to other organizations and projects. This section supports
+ecosystem mapping, governance transparency, and machine-readable attribution
+of stewardship and contribution.</t>
+<t>Each relationship object has the following members.</t>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>type</tt></td>
+<td>string</td>
+<td>REQUIRED</td>
+<td>Relationship type describing the role or interaction.</td>
+</tr>
+
+<tr>
+<td><tt>target</tt></td>
+<td>object</td>
+<td>REQUIRED</td>
+<td>The related organization or project.</td>
+</tr>
+
+<tr>
+<td><tt>since</tt></td>
+<td>string</td>
+<td>OPTIONAL</td>
+<td>RFC 3339 date or date-time when the relationship started.</td>
+</tr>
+
+<tr>
+<td><tt>until</tt></td>
+<td>string</td>
+<td>OPTIONAL</td>
+<td>RFC 3339 date or date-time when the relationship ended.</td>
+</tr>
+
+<tr>
+<td><tt>description</tt></td>
+<td>string</td>
+<td>OPTIONAL</td>
+<td>Human-readable explanation.</td>
+</tr>
+
+<tr>
+<td><tt>evidence</tt></td>
+<td>array</td>
+<td>OPTIONAL</td>
+<td>URLs or structured objects supporting the claim.</td>
+</tr>
+
+<tr>
+<td><tt>contacts</tt></td>
+<td>array</td>
+<td>OPTIONAL</td>
+<td>Contacts for this relationship.</td>
+</tr>
+
+<tr>
+<td><tt>tags</tt></td>
+<td>array</td>
+<td>OPTIONAL</td>
+<td>Keywords for classification and search.</td>
+</tr>
+
+<tr>
+<td><tt>extensions</tt></td>
+<td>object</td>
+<td>OPTIONAL</td>
+<td>Relationship-specific extensions.</td>
+</tr>
+</tbody>
+</table><t>Recommended values for <tt>type</tt> are:</t>
+
+<ul spacing="compact">
+<li><tt>maintains</tt>;</li>
+<li><tt>co_maintains</tt>;</li>
+<li><tt>supports</tt>;</li>
+<li><tt>contributes_to</tt>;</li>
+<li><tt>sponsors</tt>;</li>
+<li><tt>upstream_of</tt>;</li>
+<li><tt>downstream_of</tt>;</li>
+<li><tt>member_of</tt>; and</li>
+<li><tt>affiliated_with</tt>.</li>
+</ul>
+
+<section anchor="target"><name><tt>target</tt></name>
+<t>The <tt>target</tt> object identifies the related entity.</t>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>kind</tt></td>
+<td>string</td>
+<td>REQUIRED</td>
+<td>Either <tt>organization</tt> or <tt>project</tt>.</td>
+</tr>
+
+<tr>
+<td><tt>name</tt></td>
+<td>string</td>
+<td>REQUIRED</td>
+<td>Display name of the target.</td>
+</tr>
+
+<tr>
+<td><tt>domain</tt></td>
+<td>string</td>
+<td>OPTIONAL</td>
+<td>Domain of the target organization.</td>
+</tr>
+
+<tr>
+<td><tt>ocd</tt></td>
+<td>string</td>
+<td>OPTIONAL</td>
+<td>URL to the target's OCD document.</td>
+</tr>
+
+<tr>
+<td><tt>url</tt></td>
+<td>string</td>
+<td>OPTIONAL</td>
+<td>Canonical human-readable URL for the target.</td>
+</tr>
+
+<tr>
+<td><tt>project</tt></td>
+<td>object</td>
+<td>OPTIONAL</td>
+<td>Project identifier; required when <tt>kind</tt> is <tt>project</tt>.</td>
+</tr>
+</tbody>
+</table></section>
+
+<section anchor="target-project"><name><tt>target.project</tt></name>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>repository_url</tt></td>
+<td>string</td>
+<td>OPTIONAL</td>
+<td>Canonical repository URL.</td>
+</tr>
+
+<tr>
+<td><tt>homepage</tt></td>
+<td>string</td>
+<td>OPTIONAL</td>
+<td>Project homepage or project page URL.</td>
+</tr>
+
+<tr>
+<td><tt>license</tt></td>
+<td>string</td>
+<td>OPTIONAL</td>
+<td>SPDX license identifier.</td>
+</tr>
+</tbody>
+</table></section>
+
+<section anchor="evidence"><name><tt>evidence</tt></name>
+<t>The <tt>evidence</tt> member is an array containing either bare URLs or structured
+objects.</t>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><tt>url</tt></td>
+<td>string</td>
+<td>Evidence URL.</td>
+</tr>
+
+<tr>
+<td><tt>label</tt></td>
+<td>string</td>
+<td>Short label for humans.</td>
+</tr>
+
+<tr>
+<td><tt>type</tt></td>
+<td>string</td>
+<td>Evidence type, such as <tt>policy</tt>, <tt>announcement</tt>, or <tt>repo-metadata</tt>.</td>
+</tr>
+</tbody>
+</table></section>
+</section>
+
+<section anchor="extensions"><name><tt>extensions</tt></name>
+<t>The <tt>extensions</tt> object allows custom additions without breaking
+compatibility. Consumers <bcp14>MUST</bcp14> ignore unknown extension members. Extension
+names <bcp14>SHOULD</bcp14> be logically namespaced to reduce collisions.</t>
+</section>
+</section>
+
+<section anchor="validation-and-processing-rules"><name>Validation and Processing Rules</name>
+<t>An OCD processor:</t>
+
+<ul spacing="compact">
+<li><bcp14>MUST</bcp14> parse the document as JSON;</li>
+<li><bcp14>MUST</bcp14> treat <tt>spec_version</tt>, <tt>generated_at</tt>, and <tt>organization</tt> as
+required top-level members;</li>
+<li><bcp14>MUST</bcp14> ignore unknown members;</li>
+<li><bcp14>SHOULD</bcp14> validate date-time values against RFC 3339;</li>
+<li><bcp14>SHOULD</bcp14> validate license identifiers against SPDX when such validation is
+available; and</li>
+<li><bcp14>SHOULD</bcp14> preserve unrecognized extension content when transforming or
+proxying an OCD document.</li>
+</ul>
+</section>
+
+<section anchor="example"><name>Example</name>
+<t>The following example illustrates an OCD document.</t>
+
+<sourcecode type="json"><![CDATA[{
+  "spec_version": "1.0",
+  "generated_at": "2026-02-23T09:00:00Z",
+  "organization": {
+    "name": "Example Organization",
+    "domain": "example.org",
+    "description": "An organization contributing to open source software, open data, and open standards.",
+    "country": "LU",
+    "links": {
+      "homepage": "https://example.org",
+      "opensource_page": "https://example.org/open",
+      "github_org": "https://github.com/example-org"
+    }
+  },
+  "contacts": {
+    "opensource": {
+      "email": "opensource@example.org"
+    },
+    "security": {
+      "url": "https://example.org/.well-known/security.txt"
+    },
+    "community": {
+      "email": "community@example.org"
+    }
+  },
+  "policies": {
+    "code_of_conduct": "https://example.org/code-of-conduct",
+    "contributing": "https://example.org/contributing",
+    "vulnerability_disclosure": "https://example.org/security",
+    "license_policy": "https://example.org/open/licensing"
+  },
+  "projects": [
+    {
+      "name": "Vulnerability Lookup",
+      "description": "An open platform to correlate and explore vulnerability intelligence.",
+      "status": "active",
+      "repository": {
+        "url": "https://github.com/example-org/vulnerability-lookup",
+        "license": "AGPL-3.0",
+        "type": "git",
+        "clone": "https://github.com/example-org/vulnerability-lookup.git",
+        "tests": "https://ci.example.org/job/vulnerability-lookup/"
+      },
+      "links": {
+        "project_page": "https://www.vulnerability-lookup.org",
+        "homepage": "https://example.org/projects/vulnerability-lookup",
+        "documentation": "https://docs.vulnerability-lookup.org",
+        "demo": "https://vulnerability.example.org",
+        "releases": "https://github.com/example-org/vulnerability-lookup/releases",
+        "community": "https://matrix.to/#/#vulnlookup:matrix.org",
+        "metadata": {
+          "openapi": "https://vulnerability.example.org/openapi.json"
+        }
+      },
+      "participate": {
+        "issues": "https://github.com/example-org/vulnerability-lookup/issues",
+        "good_first_issues": "https://github.com/example-org/vulnerability-lookup/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22",
+        "chat": "https://matrix.to/#/#vulnlookup:matrix.org",
+        "docs": "https://docs.vulnerability-lookup.org"
+      },
+      "governance": {
+        "maintainers": [
+          "maintainers@example.org"
+        ],
+        "codeowners": "https://github.com/example-org/vulnerability-lookup/blob/main/CODEOWNERS"
+      },
+      "release": {
+        "changelog": "https://github.com/example-org/vulnerability-lookup/releases",
+        "security_policy": "https://github.com/example-org/vulnerability-lookup/security/policy"
+      },
+      "tags": [
+        "security",
+        "vulnerability-management",
+        "open-source"
+      ]
+    }
+  ],
+  "open_data": [
+    {
+      "name": "Daily Threat Indicators",
+      "description": "Open dataset of curated threat intelligence indicators.",
+      "license": "CC-BY-4.0",
+      "publisher": "Example Organization",
+      "urls": {
+        "landing_page": "https://example.org/data/threat-indicators",
+        "download": "https://example.org/data/threat-indicators/latest.json",
+        "api": "https://example.org/api/threat-indicators"
+      },
+      "formats": [
+        "json",
+        "csv"
+      ],
+      "update_frequency": "daily",
+      "schema": "https://example.org/data/threat-indicators/schema.json",
+      "tags": [
+        "open-data",
+        "cybersecurity",
+        "threat-intelligence"
+      ]
+    }
+  ],
+  "open_standards": [
+    {
+      "body": "IETF",
+      "working_groups": [
+        "openpgp",
+        "sidrops"
+      ],
+      "contributions": [
+        {
+          "type": "draft-author",
+          "title": "Example Secure Exchange Format",
+          "url": "https://datatracker.ietf.org/doc/draft-example-secure-exchange/"
+        },
+        {
+          "type": "implementation",
+          "title": "Reference implementation",
+          "url": "https://github.com/example-org/secure-exchange"
+        }
+      ],
+      "contacts": [
+        {
+          "email": "standards@example.org"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "type": "co_maintains",
+      "description": "We co-maintain the upstream project with the foundation and another OSPO.",
+      "since": "2023-05-01",
+      "target": {
+        "kind": "project",
+        "name": "Upstream Tooling",
+        "url": "https://upstream.example.net/tooling",
+        "ocd": "https://upstream.example.net/.well-known/open-contributions.json",
+        "project": {
+          "repository_url": "https://github.com/upstream/tooling",
+          "homepage": "https://upstream.example.net/tooling",
+          "license": "MPL-2.0"
+        }
+      },
+      "evidence": [
+        "https://github.com/upstream/tooling/blob/main/MAINTAINERS.md",
+        "https://github.com/upstream/tooling/graphs/contributors"
+      ],
+      "contacts": [
+        {
+          "email": "opensource@example.org"
+        }
+      ],
+      "tags": [
+        "governance",
+        "maintenance"
+      ]
+    }
+  ],
+  "extensions": {}
+}
+]]>
+</sourcecode>
+</section>
+
+<section anchor="security-considerations"><name>Security Considerations</name>
+<t>OCD documents are descriptive metadata and do not directly grant privileges or
+convey authority. However, consumers might use OCD data to drive discovery,
+ranking, trust decisions, or automation. A malicious or compromised publisher
+could therefore provide inaccurate metadata.</t>
+<t>Consumers <bcp14>SHOULD</bcp14> treat OCD content as unverified assertions unless backed
+by independently validated evidence. Consumers that act automatically on OCD
+content <bcp14>SHOULD</bcp14> apply origin authentication, transport security, and local
+policy before making trust or security decisions.</t>
+<t>Publishing contact information can increase discoverability but can also
+increase unwanted scraping, profiling, or spam. Publishers SHOULD consider the
+privacy impact of any personal data included in OCD documents.</t>
+</section>
+
+<section anchor="iana-considerations"><name>IANA Considerations</name>
+<t>IANA is requested to register the well-known URI suffix <tt>open-contributions.json</tt> in the &quot;Well-Known URIs&quot; registry established by RFC 8615.</t>
+<t>The registry entry should include the following information:</t>
+
+<ul spacing="compact">
+<li>URI suffix: <tt>open-contributions.json</tt></li>
+<li>Change controller: <eref target="https://ossbase.org/">OSSBASE</eref></li>
+<li>Specification document(s): This document</li>
+</ul>
+<t>This well-known resource is used to discover a JSON document describing an organization's open contributions profile.</t>
+<t>A registration request for this well-known URI suffix has been filed and is tracked at:
+<eref target="https://github.com/protocol-registries/well-known-uris/issues/78">https://github.com/protocol-registries/well-known-uris/issues/78</eref></t>
+</section>
+
+</middle>
+
+<back>
+<references><name>Normative References</name>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.3339.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8259.xml"/>
+<xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8615.xml"/>
+</references>
+
+<section anchor="references"><name>References</name>
+</section>
+
+</back>
+
+</rfc>
