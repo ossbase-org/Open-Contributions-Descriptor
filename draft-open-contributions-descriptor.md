@@ -59,7 +59,7 @@ standards, documenting governance, and supporting external communities.
 Today, this information is usually fragmented across websites, forge hosting
 platforms, policy pages, and standards organization portals.
 
-The Open Contributions Descriptor (OCD) defines a single JSON document that
+The Open Contributions Descriptor (OCD) defines a single JSON [@!RFC8259] document that
 aggregates this information in a predictable format. OCD is intended for both
 human readers and automated tooling. Example use cases include:
 
